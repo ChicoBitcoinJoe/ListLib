@@ -1,2 +1,2 @@
 # ListLib
-A simple solidity contract to add and remove values from a list
+A simple solidity contract to add and remove addresses from a list
