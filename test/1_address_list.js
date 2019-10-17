@@ -20,8 +20,14 @@ contract("AddressList", async (accounts) => {
     it("deploy address list", async () => {
         Blueprint = await AddressListArtifact.new();
         Factory = await AddressListFactoryArtifact.new(Blueprint.address);
-        let tx = await Factory.create(owner);
+        let tx = await Factory.createEmptyList(owner);
+        let tx2 = await Factory.createFromList(owner, [addressA, addressB, addressC, addressD]);
         AddressList = await AddressListArtifact.at(tx.logs[0].args.list);
+        AddressList2 = await AddressListArtifact.at(tx2.logs[0].args.list);
+        let expected = await AddressList2.getList();
+        assert(expected.toString() == [addressA, addressB, addressC, addressD].toString(), "initialization failed to create list");
+        assert(await AddressList.owner() == owner, "invalid owner");
+        assert(await AddressList2.owner() == owner, "invalid owner");
     });
 
     it("add addresses to list", async () => {
@@ -79,9 +85,5 @@ contract("AddressList", async (accounts) => {
         assert(await AddressList.contains(addressC) == false, "should not contain: " + addressC);
         assert(await AddressList.contains(addressD) == false, "should not contain: " + addressD);
     });
-
-    function random (min, max) {
-        return min + Math.floor(Math.random() * (max - min));
-    }
 
 });

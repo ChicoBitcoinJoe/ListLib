@@ -1,5 +1,20 @@
 pragma solidity ^0.5.0;
 
+contract Clone {
+
+  CloneFactory public Factory;
+
+  uint public blockInitialized;
+
+  modifier requireNotInitialized () {
+    require(blockInitialized == 0);
+    Factory = CloneFactory(msg.sender);
+    _;
+    blockInitialized = block.number;
+  }
+
+}
+
 /*
 The MIT License (MIT)
 
