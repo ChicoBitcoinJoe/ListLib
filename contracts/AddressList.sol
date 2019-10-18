@@ -118,12 +118,14 @@ contract AddressList is IAddressList, Owned, Clone {
         owner = _owner;
     }
 
-    function add (address item) public onlyOwner returns (bool) {
-        return list.add(item);
+    function add (address item) public onlyOwner returns (bool success) {
+        success = list.add(item);
+        if(success) emit Add_event(item);
     }
 
-    function remove (address item) public onlyOwner returns (bool) {
-        return list.remove(item);
+    function remove (address item) public onlyOwner returns (bool success) {
+        success = list.remove(item);
+        if(success) emit Remove_event(item);
     }
 
     function contains (address item) public view returns (bool) {
@@ -145,6 +147,9 @@ contract AddressList is IAddressList, Owned, Clone {
     function getLength () public view returns (uint) {
         return list.getLength();
     }
+
+    event Add_event(address item);
+    event Remove_event(address item);
 
 }
 
